@@ -1,5 +1,7 @@
 const ADD_POST = "ADD-POST";
 const UPDATE_NEW_POST_TEXT = "UPDATE-NEW-POST-TEXT";
+const UPDATE_NEW_MESSAGE_BODY = "UPDATE-NEW-MESSAGE-BODY";
+const SEND_MESSAGE = "SEND-MESSAGE";
 
 export let store = {
   _state: {
@@ -26,6 +28,7 @@ export let store = {
         { id: 5, name: "Viktor" },
         { id: 6, name: "Valera" },
       ],
+      newMessageBody: "",
     },
   },
   _callSubscriber() {
@@ -45,6 +48,16 @@ export let store = {
         break;
       case UPDATE_NEW_POST_TEXT:
         this._state.profilePage.newPostText = action.newText;
+        this._callSubscriber(this._state);
+        break;
+      case UPDATE_NEW_MESSAGE_BODY:
+        this._state.dialogsPage.newMessageBody = action.body;
+        this._callSubscriber(this._state);
+        break;
+      case SEND_MESSAGE:
+        let body = this._state.dialogsPage.newMessageBody;
+        this._state.dialogsPage.newMessageBody = "";
+        this._state.dialogsPage.messages.push({ id: 6, message: body });
         this._callSubscriber(this._state);
         break;
     }
@@ -67,4 +80,12 @@ export const updateNewPostTextActionCreator = (text) => ({
   newText: text,
 });
 
+export const sendMessageCreator = () => ({
+  type: SEND_MESSAGE,
+});
+
+export const updateNewMessageBodyCreator = (messageBody) => ({
+  type: UPDATE_NEW_MESSAGE_BODY,
+  body: messageBody,
+});
 window.state = store;
